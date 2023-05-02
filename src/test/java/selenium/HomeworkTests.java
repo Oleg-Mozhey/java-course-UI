@@ -13,10 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +155,6 @@ public class HomeworkTests {
 
     @Test
     public void workWithTablesTest(){
-        Actions actions = new Actions(driver);
         driver.get("https://demoqa.com/webtables");
 
         WebElement editButton = driver.findElement(By.xpath("//div[text() ='Cierra']/parent::*//div[contains(@class, \"action-buttons\")]/span[@id = \"edit-record-1\"]"));
@@ -201,6 +197,38 @@ public class HomeworkTests {
         Thread.sleep(2000);   //little hack here
         ModalText = driver.findElement(By.xpath("/html/body/div[4]/div/div/div[2]"));
         assertThat(ModalText.getText()).contains("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
+    }
+
+    @Test
+    public void checkAccordionText(){
+        driver.get("https://demoqa.com/accordian");
+        WebElement accordion = driver.findElement(By.xpath("//*[@id=\"section2Heading\"]"));
+        accordion.click();
+        WebElement accordionContent = driver.findElement(By.xpath("//*[@id=\"section2Content\"]"));
+        assertThat(accordionContent.getText()).contains("Hampden-Sydney College");
+    }
+
+    @Test
+    public void checkButtonsVisibility(){
+        driver.get("http://uitestingplayground.com/visibility");
+
+        WebElement buttonToHide = driver.findElement(By.xpath("//*[@id=\"hideButton\"]"));
+        buttonToHide.click();
+        checkVisibility("//*[@id=\"removedButton\"]");
+        checkVisibility("//*[@id=\"zeroWidthButton\"]");
+        checkVisibility("//*[@id=\"overlappedButton\"]");
+        checkVisibility("//*[@id=\"transparentButton\"]");
+        checkVisibility("//*[@id=\"invisibleButton\"]");
+        checkVisibility("//*[@id=\"notdisplayedButton\"]");
+        checkVisibility("//*[@id=\"offscreenButton\"]");
+    }
+
+    private void checkVisibility(String xpath){
+        List<WebElement> elements = driver.findElements(By.xpath("//*[@id=\"removedButton\"]"));
+        if (elements.size() == 0){
+            return;
+        }
+        assertThat(elements.get(0).isDisplayed()).isFalse();
     }
 
 }
